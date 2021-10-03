@@ -1,9 +1,11 @@
 import * as THREE from "https://threejsfundamentals.org/threejs/resources/threejs/r132/build/three.module.js";
 import { OrbitControls } from "https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/controls/OrbitControls.js";
 import { GUI } from "https://threejsfundamentals.org/threejs/../3rdparty/dat.gui.module.js";
-
+import { GLTFLoader } from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/loaders/GLTFLoader.js';
 var camera, scene, renderer, controls;
 var light1, light2, light3, light4, stem1, ground, stem2, stem3, stem4;
+var loadingModelsCounter = 0;
+var totalModels = 7;
 var cameraCordinates = {
   x: 0,
   y: 2,
@@ -22,37 +24,38 @@ function init() {
   );
   camera.position.set(0, 2, 8).setLength(120);
   camera.lookAt(0, 10, 0);
-  renderer = new THREE.WebGLRenderer();
+  renderer = new THREE.WebGLRenderer({antialias: true});
   renderer.setSize(window.outerWidth, window.outerHeight);
   renderer.setClearColor(0xb5deff);
   document.body.appendChild(renderer.domElement);
   controls = new OrbitControls(camera, renderer.domElement);
   var plane = new THREE.GridHelper(120, 70);
   scene.add(plane);
-
+  var light = new THREE.AmbientLight(0xffffff); 
+  scene.add(light);
   light1 = new THREE.Mesh(
     new THREE.SphereGeometry(3.5, 6.5, 3.2, 2),
     new THREE.MeshBasicMaterial({ color: "yellow", wireframe: false })
   );
-  light1.position.set(57, 0, 57);
+  light1.position.set(57, 10, 57);
 
   light2 = new THREE.Mesh(
     new THREE.SphereGeometry(3.5, 6.5, 3.2, 2),
     new THREE.MeshBasicMaterial({ color: "yellow", wireframe: false })
   );
-  light2.position.set(-57, 0, -57);
+  light2.position.set(-57, 10, -57);
 
   light3 = new THREE.Mesh(
     new THREE.SphereGeometry(3.5, 6.5, 3.2, 2),
     new THREE.MeshBasicMaterial({ color: "yellow", wireframe: false })
   );
-  light3.position.set(-57, 0, 57);
+  light3.position.set(-57, 10, 57);
 
   light4 = new THREE.Mesh(
     new THREE.SphereGeometry(3.5, 6.5, 3.2, 2),
     new THREE.MeshBasicMaterial({ color: "yellow", wireframe: false })
   );
-  light4.position.set(57, 0, -57);
+  light4.position.set(57, 10, -57);
 
   stem1 = new THREE.Mesh(
     new THREE.BoxGeometry(5, 40, 5),
@@ -85,7 +88,7 @@ function init() {
   ground.position.set(0, -5, 0);
 
   scene.add(ground);
-  var worldAxis = new THREE.AxesHelper(5);
+  var worldAxis = new THREE.AxesHelper(1);
   light1.add(worldAxis);
   light2.add(worldAxis);
   light3.add(worldAxis);
@@ -94,23 +97,213 @@ function init() {
   scene.add(light2);
   scene.add(light3);
   scene.add(light4);
-  scene.add(stem1);
-  scene.add(stem2);
-  scene.add(stem3);
-  scene.add(stem4);
+  //scene.add(stem1);
+  //scene.add(stem2);
+  //scene.add(stem3);
+  //scene.add(stem4);
 
-  var index = 5;
+  var loader = new GLTFLoader();
+  
+ 
+
+  loader.load(
+    'models/tree.glb',
+    function ( gltf ) {
+        let object = gltf.scene.children[0];
+        object.scale.set(100,75,100);
+        
+        object.position.set(55, 16.5, -82);
+        scene.add( object );
+        
+        renderer.render(scene, camera);
+    },
+    function ( xhr ) {
+        
+        if(( xhr.loaded / xhr.total * 100 ) ==  100 ){
+          console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+          loadingModelsCounter++;
+          if(loadingModelsCounter == totalModels){
+            document.getElementById("loader").hidden = true;
+          }
+        }
+    },
+    function ( error ) {
+        console.log( 'An error happened' );
+        console.log(error)
+    }
+);
+loader.load(
+  'models/tree.glb',
+  function ( gltf ) {
+      let object = gltf.scene.children[0];
+      object.scale.set(100,75,100);
+      object.position.set(-55, 16.5, -82);
+      scene.add( object );
+      renderer.render(scene, camera);
+  },
+  function ( xhr ) {
+      
+      if(( xhr.loaded / xhr.total * 100 ) ==  100 ){
+        console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+        loadingModelsCounter++;
+        if(loadingModelsCounter == totalModels){
+          document.getElementById("loader").hidden = true;
+        }
+      }
+  },
+  function ( error ) {
+      console.log( 'An error happened' );
+      console.log(error)
+  }
+);
+loader.load(
+  'models/tree.glb',
+  function ( gltf ) {
+      let object = gltf.scene.children[0];
+      object.scale.set(100,75,100);
+      object.position.set(-55, 16.5, 35);
+      scene.add( object );
+      renderer.render(scene, camera);
+  },
+  function ( xhr ) {
+      
+      if(( xhr.loaded / xhr.total * 100 ) ==  100 ){
+        console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+        loadingModelsCounter++;
+        if(loadingModelsCounter == totalModels){
+          document.getElementById("loader").hidden = true;
+        }
+      }
+  },
+  function ( error ) {
+      console.log( 'An error happened' );
+      console.log(error)
+  }
+);
+ 
+loader.load(
+  'models/tree.glb',
+  function ( gltf ) {
+      let object = gltf.scene.children[0];
+      object.scale.set(100,75,100);
+      object.position.set(55, 16.5, 35);
+      scene.add( object );
+      renderer.render(scene, camera);
+      
+  },
+  function ( xhr ) {
+     
+      if(( xhr.loaded / xhr.total * 100 ) ==  100 ){
+        console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+        loadingModelsCounter++;
+        if(loadingModelsCounter == totalModels){
+          document.getElementById("loader").hidden = true;
+        }
+      }
+  },
+  function ( error ) {
+      console.log( 'An error happened' );
+      console.log(error)
+  }
+);
+
+loader.load(
+  'models/bench.glb',
+  function ( gltf ) {
+      let object = gltf.scene.children[0];
+      object.scale.set(60,25,45);
+      object.position.set(-65, 4, 15);
+      object.rotation.set(0, 1.580, 0);
+      console.log(object);
+      scene.add( object );
+      renderer.render(scene, camera);
+      
+  },
+  function ( xhr ) {
+     
+      if(( xhr.loaded / xhr.total * 100 ) ==  100 ){
+        console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+        loadingModelsCounter++;
+        if(loadingModelsCounter == totalModels){
+          document.getElementById("loader").hidden = true;
+        }
+      }
+  },
+  function ( error ) {
+      console.log( 'An error happened' );
+      console.log(error)
+  }
+);
+
+loader.load(
+  'models/bench.glb',
+  function ( gltf ) {
+      let object = gltf.scene.children[0];
+      object.scale.set(60,25,45);
+      object.position.set(65, 4, 15);
+      object.rotation.set(0, -1.580, 0);
+      console.log(object);
+      scene.add( object );
+      renderer.render(scene, camera);
+      
+  },
+  function ( xhr ) {
+     
+      if(( xhr.loaded / xhr.total * 100 ) ==  100 ){
+        console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+        loadingModelsCounter++;
+        if(loadingModelsCounter == totalModels){
+          document.getElementById("loader").hidden = true;
+        }
+      }
+  },
+  function ( error ) {
+      console.log( 'An error happened' );
+      console.log(error)
+  }
+);
+
+loader.load(
+  'models/bench.glb',
+  function ( gltf ) {
+      let object = gltf.scene.children[0];
+      object.scale.set(60,25,45);
+      object.position.set(0, 4, -68);
+      
+      console.log(object);
+      scene.add( object );
+      renderer.render(scene, camera);
+      
+  },
+  function ( xhr ) {
+     
+      if(( xhr.loaded / xhr.total * 100 ) ==  100 ){
+        console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+        loadingModelsCounter++;
+        if(loadingModelsCounter == totalModels){
+          document.getElementById("loader").hidden = true;
+        }
+      }
+  },
+  function ( error ) {
+      console.log( 'An error happened' );
+      console.log(error)
+  }
+);
+
+
+  var index = 10;
   var angles = [0, 45, 90, 135, 180, 225, 270, 315, 360];
   var piValues = [];
-  var R = 7.5;
-  var K = 23;
+  var R = 5.5;
+  var K = 10.3;
   var isReverse = false;
   setInterval(() => {
     var x = R * Math.cos(index);
     var y = R * Math.sin(index);
     var z = K * (index * (Math.PI / 180));
     if (isReverse == false) {
-      if (index == 360 || Math.floor(z) == 35) {
+      if (index == 360 || Math.floor(z) == 30) {
         isReverse = true;
       } else {
         index++;
@@ -142,12 +335,12 @@ function render() {
 
 function handleKeys() {
   document.onkeydown = function (event) {
-    console.log(event.key);
+    //console.log(event.key);
     switch (event.key) {
       case " ":
         console.log(camera.position.y);
         if (camera.position.y <= 40) camera.position.y += 2;
-        else alert("bottom boundry exceed");
+        else alert("top boundry exceed");
         break;
       case "Control":
         console.log(camera.position.y);
