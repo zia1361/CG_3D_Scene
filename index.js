@@ -2,6 +2,9 @@ import * as THREE from "https://threejsfundamentals.org/threejs/resources/threej
 import { OrbitControls } from "https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/controls/OrbitControls.js";
 import { GUI } from "https://threejsfundamentals.org/threejs/../3rdparty/dat.gui.module.js";
 import { GLTFLoader } from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/loaders/GLTFLoader.js';
+import {GLTFExporter} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/exporters/GLTFExporter.js';
+import {OBJExporter} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/exporters/OBJExporter.js';
+
 var camera, scene, renderer, controls;
 var light1, light2, light3, light4, stem1, ground, stem2, stem3, stem4;
 var loadingModelsCounter = 0;
@@ -33,6 +36,8 @@ function init() {
   scene.add(plane);
   var light = new THREE.AmbientLight(0xffffff); 
   scene.add(light);
+  const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+  const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
   light1 = new THREE.Mesh(
     new THREE.SphereGeometry(3.5, 6.5, 3.2, 2),
     new THREE.MeshBasicMaterial({ color: "yellow", wireframe: false })
@@ -372,3 +377,23 @@ function handleKeys() {
     }
   };
 }
+
+setTimeout(() => {
+  var exporter = new GLTFExporter();
+  exporter.parse(
+    scene,
+    function(result){
+      var blob = new Blob([result], {type: 'application/json'}, "myScene.glb");
+      console.log(blob);
+      var link = document.getElementById("downloadLink");
+      link.href = URL.createObjectURL(blob);
+      link.download = "myScene.glb";
+      link.click();
+      
+    },
+    {
+      binary: true
+    }
+  );
+  
+}, 2000);
