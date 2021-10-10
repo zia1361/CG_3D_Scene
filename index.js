@@ -5,18 +5,17 @@ import { GLTFLoader } from 'https://threejsfundamentals.org/threejs/resources/th
 import {GLTFExporter} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/exporters/GLTFExporter.js';
 import {OBJExporter} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/exporters/OBJExporter.js';
 
+import {drawFloor} from './factory.js';
+
+
 var camera, scene, renderer, controls;
-var light1, light2, light3, light4, stem1, ground, stem2, stem3, stem4;
+var light1, light2, light3, light4;
 var loadingModelsCounter = 0;
 var totalModels = 7;
-var cameraCordinates = {
-  x: 0,
-  y: 2,
-  z: 8,
-};
 init();
 animate();
 handleKeys();
+drawFloor(20, 30, THREE, scene);
 function init() {
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(
@@ -62,37 +61,9 @@ function init() {
   );
   light4.position.set(57, 10, -57);
 
-  stem1 = new THREE.Mesh(
-    new THREE.BoxGeometry(5, 40, 5),
-    new THREE.MeshBasicMaterial({ color: "brown", wireframe: false })
-  );
-  stem1.position.set(57, 15, 57);
+ 
 
-  stem2 = new THREE.Mesh(
-    new THREE.BoxGeometry(5, 40, 5),
-    new THREE.MeshBasicMaterial({ color: "brown", wireframe: false })
-  );
-  stem2.position.set(-57, 15, -57);
-
-  stem3 = new THREE.Mesh(
-    new THREE.BoxGeometry(5, 40, 5),
-    new THREE.MeshBasicMaterial({ color: "brown", wireframe: false })
-  );
-  stem3.position.set(-57, 15, 57);
-
-  stem4 = new THREE.Mesh(
-    new THREE.BoxGeometry(5, 40, 5),
-    new THREE.MeshBasicMaterial({ color: "brown", wireframe: false })
-  );
-  stem4.position.set(57, 15, -57);
-
-  ground = new THREE.Mesh(
-    new THREE.BoxGeometry(120, 10, 120),
-    new THREE.MeshBasicMaterial({ color: 0x1c7947, wireframe: false })
-  );
-  ground.position.set(0, -5, 0);
-
-  scene.add(ground);
+  
   var worldAxis = new THREE.AxesHelper(1);
   light1.add(worldAxis);
   light2.add(worldAxis);
@@ -102,10 +73,6 @@ function init() {
   scene.add(light2);
   scene.add(light3);
   scene.add(light4);
-  //scene.add(stem1);
-  //scene.add(stem2);
-  //scene.add(stem3);
-  //scene.add(stem4);
 
   var loader = new GLTFLoader();
   
@@ -296,10 +263,57 @@ loader.load(
   }
 );
 
+function rotateModelZ(object){
+  var shouldFlipDirection = false;
+  var counter = 0;
+  setInterval(() => {
+    
+    object.rotation.set(.1, object.rotation.y -.2, 0);
+    
+  }, 100);
+  
+}
+loader.load(
+  'models/bird.glb',
+  function ( gltf ) {
+      let object = gltf.scene.children[0];
+      object.scale.set(60,25,45);
+      object.position.set(0, 20, 0);
+      //object.rotation.set(0, -.5, 0);
+      console.log(object);
+      scene.add( object );
+      renderer.render(scene, camera);
+      rotateModelZ(object);
+      var counter = 0;
+      return;
+      setInterval(() => {
+        object.position.set(counter, 5, 0);
+        counter +=5;
+        if(counter == 65){
+          counter = 0;
+          object.rotation.set(0, 0, 0.5);
+        }
+      }, 200);
+      
+  },
+  function ( xhr ) {
+     
+      if(( xhr.loaded / xhr.total * 100 ) ==  100 ){
+        console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+        loadingModelsCounter++;
+        if(loadingModelsCounter == totalModels){
+          document.getElementById("loader").hidden = true;
+        }
+      }
+  },
+  function ( error ) {
+      console.log( 'An error happened' );
+      console.log(error)
+  }
+);
+
 
   var index = 10;
-  var angles = [0, 45, 90, 135, 180, 225, 270, 315, 360];
-  var piValues = [];
   var R = 5.5;
   var K = 10.3;
   var isReverse = false;
@@ -328,7 +342,7 @@ loader.load(
   }, 100);
 }
 
-var delta;
+
 function animate() {
   requestAnimationFrame(animate);
   render();
@@ -338,9 +352,13 @@ function render() {
   renderer.render(scene, camera);
 }
 
+
+
+
+
+
 function handleKeys() {
   document.onkeydown = function (event) {
-    //console.log(event.key);
     switch (event.key) {
       case " ":
         console.log(camera.position.y);
@@ -377,23 +395,3 @@ function handleKeys() {
     }
   };
 }
-
-setTimeout(() => {
-  var exporter = new GLTFExporter();
-  exporter.parse(
-    scene,
-    function(result){
-      var blob = new Blob([result], {type: 'application/json'}, "myScene.glb");
-      console.log(blob);
-      var link = document.getElementById("downloadLink");
-      link.href = URL.createObjectURL(blob);
-      link.download = "myScene.glb";
-      link.click();
-      
-    },
-    {
-      binary: true
-    }
-  );
-  
-}, 2000);
