@@ -4,6 +4,7 @@ import { GUI } from "https://threejsfundamentals.org/threejs/../3rdparty/dat.gui
 import { GLTFLoader } from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/loaders/GLTFLoader.js';
 import {GLTFExporter} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/exporters/GLTFExporter.js';
 import {OBJExporter} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/exporters/OBJExporter.js';
+
 import {drawFloor} from './factory.js';
 
 
@@ -244,6 +245,55 @@ loader.load(
       console.log(object);
       scene.add( object );
       renderer.render(scene, camera);
+      
+  },
+  function ( xhr ) {
+     
+      if(( xhr.loaded / xhr.total * 100 ) ==  100 ){
+        console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+        loadingModelsCounter++;
+        if(loadingModelsCounter == totalModels){
+          document.getElementById("loader").hidden = true;
+        }
+      }
+  },
+  function ( error ) {
+      console.log( 'An error happened' );
+      console.log(error)
+  }
+);
+
+function rotateModelZ(object){
+  var shouldFlipDirection = false;
+  var counter = 0;
+  setInterval(() => {
+    
+    object.rotation.set(.1, object.rotation.y -.2, 0);
+    
+  }, 100);
+  
+}
+loader.load(
+  'models/bird.glb',
+  function ( gltf ) {
+      let object = gltf.scene.children[0];
+      object.scale.set(60,25,45);
+      object.position.set(0, 20, 0);
+      //object.rotation.set(0, -.5, 0);
+      console.log(object);
+      scene.add( object );
+      renderer.render(scene, camera);
+      rotateModelZ(object);
+      var counter = 0;
+      return;
+      setInterval(() => {
+        object.position.set(counter, 5, 0);
+        counter +=5;
+        if(counter == 65){
+          counter = 0;
+          object.rotation.set(0, 0, 0.5);
+        }
+      }, 200);
       
   },
   function ( xhr ) {
