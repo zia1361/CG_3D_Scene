@@ -268,7 +268,7 @@ function rotateModelZ(object){
   var counter = 0;
   setInterval(() => {
     
-    object.rotation.set(.1, object.rotation.y -.2, 0);
+    object.rotation.set(.1, object.rotation.y -.3, 0);
     
   }, 100);
   
