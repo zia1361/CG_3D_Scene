@@ -5,7 +5,7 @@ import { GLTFLoader } from 'https://threejsfundamentals.org/threejs/resources/th
 import {GLTFExporter} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/exporters/GLTFExporter.js';
 import {OBJExporter} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/exporters/OBJExporter.js';
 
-import {drawFloor} from './factory.js';
+import {drawFloor, drawTearDrop} from './factory.js';
 
 
 var camera, scene, renderer, controls;
@@ -15,7 +15,8 @@ var totalModels = 7;
 init();
 animate();
 handleKeys();
-drawFloor(20, 30, THREE, scene);
+drawFloor(20, 10, THREE, scene);
+drawTearDrop([0,15], 2, true, scene, THREE);
 function init() {
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(
