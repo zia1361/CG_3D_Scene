@@ -27,10 +27,11 @@ export function drawFloor(numberOfRows, numberfColumns, THREE, scene){
   }
 
   export function drawTearDrop(P, Radius, Sweep, scene, THREE){
-    var L = 10;
+   for(var i = 0; i < 6; i++){
+    var L = 7;
     var C = [P[0], P[1] + L];
     const material = new THREE.MeshBasicMaterial({
-      color: "red"
+     color: colorArray[Math.floor(Math.random() * colorArray.length)]
     });
     
     var points = [];
@@ -43,7 +44,9 @@ export function drawFloor(numberOfRows, numberfColumns, THREE, scene){
     var geometry = new THREE.BufferGeometry().setFromPoints( points );
     
     var line = new THREE.Line( geometry, material );
-    console.log(line);
+    line.rotation.z = i + 0.2;
+    line.rotation.y = 0.5;
+    line.position.set(-40, 28, -30);
     scene.add( line );
 
     const curve = new THREE.EllipseCurve(
@@ -59,5 +62,27 @@ export function drawFloor(numberOfRows, numberfColumns, THREE, scene){
     
     // Create the final object to add to the scene
     const ellipse = new THREE.Line( geometry, material );
+    ellipse.rotation.z = i + 0.2;
+    ellipse.rotation.y = 0.5;
+    ellipse.position.set(-40, 28, -30);
     scene.add( ellipse );
+   }
+  }
+
+  export function drawTyre(Radius, Position, scene, THREE){
+    var tyre = new THREE.Shape();
+    tyre.moveTo(0, 5);
+    for(var i = 0; i<= 360; i++){
+      var x = Math.cos(i)*Radius;
+      var y = Math.sin(i)*Radius;
+      tyre.lineTo(x,y);
+    }
+    
+    
+    var tyreMaterial = new THREE.MeshBasicMaterial( { color: 'black' } )
+    var tyreGeom = new THREE.ShapeGeometry( tyre );
+    var tyreObject = new THREE.Line( tyreGeom, tyreMaterial ) ;
+    tyreObject.position.set(Position.x, Position.y, Position.z);
+    tyreObject.rotation.y = 0.5;
+    scene.add(tyreObject);
   }

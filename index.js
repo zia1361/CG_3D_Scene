@@ -5,7 +5,7 @@ import { GLTFLoader } from 'https://threejsfundamentals.org/threejs/resources/th
 import {GLTFExporter} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/exporters/GLTFExporter.js';
 import {OBJExporter} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/exporters/OBJExporter.js';
 
-import {drawFloor, drawTearDrop} from './factory.js';
+import {drawFloor, drawTearDrop, drawTyre} from './factory.js';
 
 
 var camera, scene, renderer, controls;
@@ -16,7 +16,11 @@ init();
 animate();
 handleKeys();
 drawFloor(20, 10, THREE, scene);
-drawTearDrop([0,15], 2, true, scene, THREE);
+drawTearDrop([0,0], 2, true, scene, THREE);
+drawTyre(3, {x: -30, y: 3, z: -30} , scene, THREE);
+drawTyre(3, {x: -50, y: 3, z: -30} , scene, THREE);
+drawTyre(3, {x: -45, y: 3, z: -22} , scene, THREE);
+drawTyre(3, {x: -34, y: 3, z: -35} , scene, THREE);
 function init() {
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(
@@ -62,8 +66,29 @@ function init() {
   );
   light4.position.set(57, 10, -57);
 
- 
-
+  const textureLoader = new THREE.TextureLoader();
+  const stallBaseMaterials = [
+    new THREE.MeshBasicMaterial({map: textureLoader.load('img/stall.jpg')}),
+    new THREE.MeshBasicMaterial({map: textureLoader.load('img/stall.jpg')}),
+    new THREE.MeshBasicMaterial({map: textureLoader.load('img/stall.jpg')}),
+    new THREE.MeshBasicMaterial({map: textureLoader.load('img/stall.jpg')}),
+    new THREE.MeshBasicMaterial({map: textureLoader.load('img/kulfi.png')}),
+    new THREE.MeshBasicMaterial({map: textureLoader.load('img/stall.jpg')}),
+  ];
+  var stallBase = new THREE.Mesh(
+    new THREE.BoxGeometry(20, 12, 12),
+    stallBaseMaterials
+  );
+  stallBase.position.set(-40, 10, -30);
+  stallBase.rotation.y = 0.5;
+  scene.add(stallBase);
+  var stallPipe = new THREE.Mesh(
+    new THREE.BoxGeometry(2, 15, 2),
+    new THREE.MeshBasicMaterial({map: textureLoader.load('img/stall.jpg')}),
+  );
+  stallPipe.position.set(-40, 23, -30);
+  stallPipe.rotation.y = 0.5;
+  scene.add(stallPipe);
   
   var worldAxis = new THREE.AxesHelper(1);
   light1.add(worldAxis);
