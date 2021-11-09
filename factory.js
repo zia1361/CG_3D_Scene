@@ -27,9 +27,19 @@ export function drawFloor(numberOfRows, numberfColumns, THREE, scene){
   }
 
   export function drawTearDrop(P, Radius, Sweep, scene, THREE){
-   for(var i = 0; i < 6; i++){
     var L = 7;
     var C = [P[0], P[1] + L];
+    var positionCordinates = {
+      x: -40,
+      y: 28,
+      z: -30
+    };
+    var rotationCordinates = {
+      x: 0,
+      y: 0.5,
+      z: 0.2
+    };
+   for(var i = 0; i < 6; i++){
     const material = new THREE.MeshBasicMaterial({
      color: colorArray[Math.floor(Math.random() * colorArray.length)]
     });
@@ -44,9 +54,9 @@ export function drawFloor(numberOfRows, numberfColumns, THREE, scene){
     var geometry = new THREE.BufferGeometry().setFromPoints( points );
     
     var line = new THREE.Line( geometry, material );
-    line.rotation.z = i + 0.2;
-    line.rotation.y = 0.5;
-    line.position.set(-40, 28, -30);
+    line.rotation.z = i + rotationCordinates.z;
+    line.rotation.y = rotationCordinates.y;
+    line.position.set(positionCordinates.x, positionCordinates.y, positionCordinates.z);
     scene.add( line );
 
     const curve = new THREE.EllipseCurve(
@@ -57,19 +67,19 @@ export function drawFloor(numberOfRows, numberfColumns, THREE, scene){
       0                 // aRotation
     );
     
-    points = curve.getPoints( 50 );
+    points = curve.getPoints(50);
     geometry = new THREE.BufferGeometry().setFromPoints( points );
     
     // Create the final object to add to the scene
     const ellipse = new THREE.Line( geometry, material );
-    ellipse.rotation.z = i + 0.2;
-    ellipse.rotation.y = 0.5;
-    ellipse.position.set(-40, 28, -30);
+    ellipse.rotation.z = i + rotationCordinates.z;
+    ellipse.rotation.y = rotationCordinates.y;
+    ellipse.position.set(positionCordinates.x, positionCordinates.y, positionCordinates.z);
     scene.add( ellipse );
    }
   }
 
-  export function drawTyre(Radius, Position, scene, THREE){
+  export function drawTyre(Radius, Position, scene, THREE, rotationAngle, tyreColor){
     var tyre = new THREE.Shape();
     tyre.moveTo(0, 5);
     for(var i = 0; i<= 360; i++){
@@ -79,10 +89,10 @@ export function drawFloor(numberOfRows, numberfColumns, THREE, scene){
     }
     
     
-    var tyreMaterial = new THREE.MeshBasicMaterial( { color: 'black' } )
+    var tyreMaterial = new THREE.MeshBasicMaterial( { color: tyreColor } )
     var tyreGeom = new THREE.ShapeGeometry( tyre );
     var tyreObject = new THREE.Line( tyreGeom, tyreMaterial ) ;
     tyreObject.position.set(Position.x, Position.y, Position.z);
-    tyreObject.rotation.y = 0.5;
+    tyreObject.rotation.y = rotationAngle;
     scene.add(tyreObject);
   }

@@ -17,10 +17,10 @@ animate();
 handleKeys();
 drawFloor(20, 10, THREE, scene);
 drawTearDrop([0,0], 2, true, scene, THREE);
-drawTyre(3, {x: -30, y: 3, z: -30} , scene, THREE);
-drawTyre(3, {x: -50, y: 3, z: -30} , scene, THREE);
-drawTyre(3, {x: -45, y: 3, z: -22} , scene, THREE);
-drawTyre(3, {x: -34, y: 3, z: -35} , scene, THREE);
+drawTyre(3, {x: -30, y: 3, z: -30} , scene, THREE, 0.5, 'black');
+drawTyre(3, {x: -50, y: 3, z: -30} , scene, THREE, 0.5, 'black');
+drawTyre(3, {x: -45, y: 3, z: -22} , scene, THREE, 0.5, 'black');
+drawTyre(3, {x: -34, y: 3, z: -35} , scene, THREE, 0.5, 'black');
 function init() {
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(
